@@ -1,0 +1,69 @@
+# Ignore specific IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Ignore OS generated files
+.DS_Store
+Thumbs.db
+
+# Ignore composer files
+/vendor/
+/composer.lock
+
+# Ignore node dependencies
+/node_modules/
+/npm-debug.log
+/yarn-error.log
+
+# Ignore environment variables
+.env
+.env.local
+.env.*.local
+
+# Ignore log files
+*.log
+logs/
+
+# Ignore cache and session files
+cache/
+tmp/
+temp/
+*.cache
+
+# Ignore PHPUnit result logs
+phpunit.xml
+phpunit.xml.dist
+.phpunit.result.cache
+
+# Ignore coverage reports
+coverage/
+*.cov
+
+# Ignore build files
+/build/
+/dist/
+
+# Ignore deployment files
+/deploy/
+
+# Ignore config files
+*.config.php
+*.local.php
+
+# Ignore test files
+/tests/_output/
+/tests/_support/_generated/
+
+# Ignore other files
+*.bak
+*.orig
+*.save
+*.sublime-project
+*.sublime-workspace
+*.bak
+
+# Ignore uploaded files
+/uploads/
+/uploads_tmp/
