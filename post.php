@@ -38,7 +38,7 @@ $user = getUserById($post['creator']);
     <?php endif; ?>
 
     <span>
-        <p><?= htmlspecialchars($post['content']) ?></p>
+        <p><?= $post['content'] ?></p>
     </span>
 </body>
 </html>

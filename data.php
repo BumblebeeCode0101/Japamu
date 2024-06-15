@@ -17,6 +17,15 @@ function getPostById($id) {
     return $q->fetch(PDO::FETCH_ASSOC);
 }
 
+function createPost($title, $subtitle, $content, $creator) {
+    global $pdo;
+    $id = uniqid();
+    // Corrected placeholders without quotes
+    $q = $pdo->prepare("INSERT INTO `posts`(`id`, `title`, `subtitle`, `content`, `creator`) VALUES (?, ?, ?, ?, ?)");
+    // Removed the quotes around the placeholders
+    $q->execute([$id, $title, $subtitle, $content, $creator]);
+}
+
 function getUserById($id) {
     global $pdo;
     $q = $pdo->prepare("SELECT * FROM users WHERE id = ?");

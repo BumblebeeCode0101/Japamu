@@ -3,7 +3,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require_once 'data.php'
+require_once 'data.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -13,6 +13,7 @@ require_once 'data.php'
     <title>Japamu</title>
 </head>
 <body>
+    <a href="/studio">Japamu Studio</a>
     <?php if ($posts): ?>
         <?php foreach ($posts as $post): ?>
             <a href="post.php?id=<?= htmlspecialchars($post['id']) ?>">
