@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         //TODO: Prevent XSS
         createPost($title, $subtitle, $content, $creator, $visibility);
-        header('Location: ../index.php');
+        header('Location: ../../index.php');
         exit;
     }
 }
@@ -44,8 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <label for="visibility">Visibility:</label> <br>
         <select name="visibility" id="visibility">
-            <option value="0">Private</option>
             <option value="1">Public</option>
+            <option value="0">Private</option>
         </select> <br><br>
 
         <textarea name="content" id="content"><?= htmlspecialchars($content ?? '') ?></textarea> <br>

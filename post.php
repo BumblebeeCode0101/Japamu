@@ -20,9 +20,13 @@ if (!$post) {
 
 $user = getUserById($post['creator']);
 
+session_start();
+
 if ($post['visibility'] == 0) {
-    require_once 'errors/post_not_found.html';
-    exit;
+    if ($_SESSION['id'] != $post['creator']) {
+        require_once 'errors/post_not_found.html';
+        exit;
+    }
 }
 ?>
 <!DOCTYPE html>

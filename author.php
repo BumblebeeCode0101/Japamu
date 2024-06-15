@@ -3,13 +3,9 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Check if data.php exists
-if (!file_exists('data.php')) {
-    echo "<h1>Required data file is missing.</h1>";
-    exit;
-}
-
 require_once 'data.php';
+
+session_start();
 
 if (!isset($_GET['tag'])) {
     echo "<h1>No tag provided.</h1>";
@@ -27,7 +23,14 @@ if (!$user) {
 $postsByUser = array_filter($posts, function($post) use ($user) {
     return $post['creator'] == $user['id'];
 });
-$postsCount = count($postsByUser);
+
+$postsCount = 0;
+
+foreach ($postsByUser as $key => $post) {
+    if ($post['visibility'] == 1 || $_SESSION['id'] == $post['creator']) {
+        $postsCount++;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -45,17 +48,20 @@ $postsCount = count($postsByUser);
         <?= $postsCount ?> Post<?= $postsCount === 1 ? '' : 's' ?>
     </h2>
     <p><?= htmlspecialchars($user['description']) ?></p>
+
     <div>
         <?php foreach ($postsByUser as $post): ?>
             <?php if ($post['visibility'] == 0):?>
-                <?php continue; ?>
+                <?php if ($_SESSION['id'] != $post['creator']):?>
+                    <?php continue; ?>
+                <?php endif; ?>
             <?php endif; ?>
             
             <a href="post.php?id=<?= htmlspecialchars($post['id']) ?>">
                 <div>
                     <h2><?= htmlspecialchars($post['title']) ?></h2>
                     <h3><?= htmlspecialchars($post['subtitle']) ?></h3>
-                    <p>By: <?= htmlspecialchars($user['name']) ?></p>
+                    <h3>By: <?= htmlspecialchars($user['name']) ?></h3>
                 </div>
             </a>
         <?php endforeach; ?>
