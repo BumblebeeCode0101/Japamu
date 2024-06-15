@@ -47,6 +47,10 @@ $postsCount = count($postsByUser);
     <p><?= htmlspecialchars($user['description']) ?></p>
     <div>
         <?php foreach ($postsByUser as $post): ?>
+            <?php if ($post['visibility'] == 0):?>
+                <?php continue; ?>
+            <?php endif; ?>
+            
             <a href="post.php?id=<?= htmlspecialchars($post['id']) ?>">
                 <div>
                     <h2><?= htmlspecialchars($post['title']) ?></h2>

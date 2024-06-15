@@ -19,6 +19,11 @@ if (!$post) {
 }
 
 $user = getUserById($post['creator']);
+
+if ($post['visibility'] == 0) {
+    require_once 'errors/post_not_found.html';
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

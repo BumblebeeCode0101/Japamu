@@ -16,6 +16,10 @@ require_once 'data.php';
     <a href="/studio">Japamu Studio</a>
     <?php if ($posts): ?>
         <?php foreach ($posts as $post): ?>
+            <?php if ($post['visibility'] == 0):?>
+                <?php continue; ?>
+            <?php endif; ?>
+            
             <a href="post.php?id=<?= htmlspecialchars($post['id']) ?>">
                 <div>
                     <h2><?= htmlspecialchars($post['title']) ?></h2>

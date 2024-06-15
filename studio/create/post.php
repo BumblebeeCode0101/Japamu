@@ -8,6 +8,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $subtitle = trim($_POST['subtitle']);
     $content = $_POST['content'];
     $creator = 1;
+    
+    $visibility = isset($_POST['visibility']) ? intval($_POST['visibility']) : 0;
 
     if (empty($title) || empty($subtitle) || empty($content)) {
         $error = "All fields are required.";
@@ -15,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Title and subtitle cannot exceed 100 characters each.";
     } else {
         //TODO: Prevent XSS
-        createPost($title, $subtitle, $content, $creator);
+        createPost($title, $subtitle, $content, $creator, $visibility);
         header('Location: ../index.php');
         exit;
     }
@@ -39,6 +41,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="text" name="title" id="title" value="<?= htmlspecialchars($title ?? '') ?>"> <br><br>
         <label for="subtitle">Subtitle:</label> <br>
         <input type="text" name="subtitle" id="subtitle" value="<?= htmlspecialchars($subtitle ?? '') ?>"> <br><br>
+
+        <label for="visibility">Visibility:</label> <br>
+        <select name="visibility" id="visibility">
+            <option value="0">Private</option>
+            <option value="1">Public</option>
+        </select> <br><br>
 
         <textarea name="content" id="content"><?= htmlspecialchars($content ?? '') ?></textarea> <br>
 
