@@ -23,7 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (strlen($title) > 250 || strlen($subtitle) > 250) {
         $error = "Title and subtitle cannot exceed 100 characters each.";
     } else {
-        //TODO: Prevent XSS
         createPost($title, $subtitle, $content, $creator, $visibility);
         header('Location: ../../index.php');
         exit;
@@ -40,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="https://cdn.tiny.cloud/1/j3fjx0g2ta78d2x4a0371gfxnzirn8t5xv075ykerqvinnro/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 </head>
 <body>
+    <h1>Create Post</h1>
     <?php if ($error): ?>
         <p style="color:red;"><?= htmlspecialchars($error) ?></p>
     <?php endif; ?>
@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <textarea name="content" id="content"><?= htmlspecialchars($content ?? '') ?></textarea> <br>
 
-        <input type="submit" value="Create Post">
+        <input type="submit" value="Publish">
     </form>
 
     <script>

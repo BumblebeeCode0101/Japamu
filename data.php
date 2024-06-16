@@ -27,6 +27,20 @@ function createPost($title, $subtitle, $content, $creator, $visibility) {
     $q->execute([$id, $title, $subtitle, $content, $creator, $visibility]);
 }
 
+function updatePost($post) {
+    global $pdo;
+    $q = $pdo->prepare("UPDATE posts SET title = ?, subtitle = ?, content = ?, visibility = ? WHERE id = ?");
+    $q->execute([$post['title'], $post['subtitle'], $post['content'], $post['visibility'], $post['id']]);
+
+    return $q->rowCount();
+}
+
+function deletePost($id) {
+    global $pdo;
+    $q = $pdo->prepare("DELETE FROM posts WHERE id = ?");
+    $q->execute([$id]);
+}
+
 function getUserById($id) {
     global $pdo;
     $q = $pdo->prepare("SELECT * FROM users WHERE id = ?");

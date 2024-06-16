@@ -49,5 +49,10 @@ if ($post['visibility'] == 0) {
     <span>
         <p><?= $post['content'] ?></p>
     </span>
+
+    <?php if ($_SESSION['id'] == $post['creator'] && $_SESSION['logged_in']): ?>
+        <a href="studio/post/edit.php?id=<?= $post['id'] ?>">Edit</a>
+        <a href="studio/post/delete.php?id=<?= $post['id'] ?>">Delete</a>
+    <?php endif; ?>
 </body>
 </html>

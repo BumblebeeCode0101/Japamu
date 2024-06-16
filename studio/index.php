@@ -14,6 +14,8 @@ if (!isset($_SESSION['id']) || !$_SESSION['logged_in']) {
     <title>Japamu Studio</title>
 </head>
 <body>
-    <a href="post/create.php">Create Post</a>        
+    <header>
+        <a href="post/create.php">Create Post</a>
+    </header> 
 </body>
 </html>

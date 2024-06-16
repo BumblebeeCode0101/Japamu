@@ -28,6 +28,7 @@ if (!isset($_SESSION['id'])) {
             <a href="login.php">Login</a>
         <?php else: ?>
             <a href="/studio">Japamu Studio</a>
+            <a href="/studio/post/create.php">Create Post</a><a href="/author.php?id=<?= $_SESSION['id'] ?>"></a>
             <a href="/logout.php">Logout</a>
         <?php endif; ?>
     </header>
