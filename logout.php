@@ -4,7 +4,7 @@ session_start();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $confirm = $_POST['confirm'] ?? null;
 
-    if ($confirm === 'yes') {
+    if ($confirm === 'Yes') {
         session_destroy();
         header('Location: index.php');
         exit;
@@ -24,8 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
         <h1>Are you sure you want to logout?</h1>
-        <input type="submit" name="confirm" value="yes">
-        <input type="submit" name="confirm" value="no">
+        <input type="submit" name="confirm" value="Yes">
+        <input type="submit" name="confirm" value="No">
     </form>
 </body>
 </html>
