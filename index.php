@@ -6,7 +6,14 @@ error_reporting(E_ALL);
 require_once 'data.php';
 
 session_start();
-$_SESSION['id'] = 1;
+
+if (!isset($_SESSION['logged_in'])) {
+    $_SESSION['logged_in'] = false;
+}
+
+if (!isset($_SESSION['id'])) {
+    $_SESSION['id'] = null;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,23 +23,31 @@ $_SESSION['id'] = 1;
     <title>Japamu</title>
 </head>
 <body>
-    <a href="/studio">Japamu Studio</a>
+    <header>
+        <?php if (!isset($_SESSION['id']) || !$_SESSION['logged_in']): ?>
+            <a href="login.php">Login</a>
+        <?php else: ?>
+            <a href="/studio">Japamu Studio</a>
+            <a href="/logout.php">Logout</a>
+        <?php endif; ?>
+    </header>
 
     <?php if ($posts): ?>
         <div>
             <?php foreach ($posts as $post): ?>
-                <?php if ($post['visibility'] == 0):?>
-                    <?php if ($_SESSION['id'] != $post['creator']):?>
-                        <?php continue; ?>
-                    <?php endif; ?>
-                <?php endif; ?>
-            
+                <?php 
+                if ($post['visibility'] == 0 && $_SESSION['id'] != $post['creator']): 
+                    continue; 
+                endif; 
+                ?>
                 <a href="post.php?id=<?= htmlspecialchars($post['id']) ?>">
                     <div>
                         <h2><?= htmlspecialchars($post['title']) ?></h2>
                         <h3><?= htmlspecialchars($post['subtitle']) ?></h3>
-                        <?php $user = getUserById($post['creator']);?>
-                        <?php if ($user):?>
+                        <?php 
+                        $user = getUserById($post['creator']); 
+                        ?>
+                        <?php if ($user): ?>
                             <h3>By: <?= htmlspecialchars($user['name']) ?></h3>
                         <?php else: ?>
                             <h3>By: Unknown</h3>

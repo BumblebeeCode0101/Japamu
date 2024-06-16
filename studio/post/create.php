@@ -1,13 +1,20 @@
 <?php
 require_once '../../data.php';
 
+session_start();
+
+if (!isset($_SESSION['id']) || !$_SESSION['logged_in']) {
+    require_once '../../login.php';
+    exit;
+}
+
 $error = null; 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = trim($_POST['title']);
     $subtitle = trim($_POST['subtitle']);
     $content = $_POST['content'];
-    $creator = 1;
+    $creator = $_SESSION['id'];
     
     $visibility = isset($_POST['visibility']) ? intval($_POST['visibility']) : 0;
 

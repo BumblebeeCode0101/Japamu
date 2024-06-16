@@ -1,3 +1,11 @@
+<?php 
+session_start();
+
+if (!isset($_SESSION['id']) || !$_SESSION['logged_in']) {
+    require_once '../login.php';
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +14,6 @@
     <title>Japamu Studio</title>
 </head>
 <body>
-    <a href="create/post.php">Create Post</a>        
+    <a href="post/create.php">Create Post</a>        
 </body>
 </html>

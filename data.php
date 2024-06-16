@@ -1,5 +1,8 @@
 <?php 
-$pdo = new PDO('mysql:host=localhost;dbname=japamu', 'root', '');
+$pdo = new PDO('mysql:host=localhost;dbname=japamu', 'root', '', [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_EMULATE_PREPARES => false
+]);
 
 function getPosts() {
     global $pdo;
@@ -40,5 +43,12 @@ function getUserByTag($tag) {
     return $q->fetch(PDO::FETCH_ASSOC);
 }
 
+function getUserByUsername($username) {
+    global $pdo;
+    $q = $pdo->prepare("SELECT * FROM users WHERE name = ?");
+    $q->execute([$username]);
+
+    return $q->fetch(PDO::FETCH_ASSOC);
+}
 $posts = getPosts();
 ?>
