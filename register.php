@@ -1,29 +1,35 @@
-<?php 
+<?php
 require_once "data.php";
 
 $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (empty($_POST['name'])) {
+    $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
+    $password = $_POST['password'];
+    $tag = filter_input(INPUT_POST, 'tag', FILTER_SANITIZE_STRING);
+    $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
+    
+    if (strpos($tag, '@') !== 0) {
+        $errors[] = "Tag must start with '@'.";
+    }
+    
+    if (empty($name)) {
         $errors[] = "Username is required.";
     }
     
-    if (empty($_POST['password'])) {
+    if (empty($password)) {
         $errors[] = "Password is required.";
     }
     
-    if (empty($_POST['tag'])) {
+    if (empty($tag)) {
         $errors[] = "Tag is required.";
-    } elseif (tagAlreadyExists($_POST['tag'])) {
+    } elseif (strpos($tag, ' ') !== false) {
+        $errors[] = "Tag cannot contain spaces.";
+    } elseif (tagAlreadyExists($tag)) {
         $errors[] = "Tag already exists. Please choose a different one.";
     }
     
     if (empty($errors)) {
-        $name = $_POST['name'];
-        $password = $_POST['password'];
-        $tag = $_POST['tag'];
-        $description = $_POST['description'];
-        
         createUser($tag, $name, $password, $description, 0);
         
         header("Location: login.php");
@@ -31,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -62,5 +69,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <textarea name="description" id="description" cols="30" rows="10"><?= isset($_POST['description']) ? htmlspecialchars($_POST['description']) : '' ?></textarea> <br><br>
         <button type="submit">Register</button>
     </form>
+
+    <script>
+        var nameElement = document.getElementById('name');
+        var tagElement = document.getElementById('tag');
+
+        nameElement.addEventListener('input', function() {
+            var nameValue = nameElement.value.trim();
+            var generatedTag = generateTag(nameValue); 
+            tagElement.value = generatedTag; 
+        });
+
+        function generateTag(name) {
+            return '@' + name.replace(/\s+/g, '');
+        }
+    </script>
 </body>
 </html>
