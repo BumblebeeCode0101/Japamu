@@ -4,6 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 require_once 'data.php';
+require_once 'helpers/time.php';
 
 session_start();
 
@@ -54,6 +55,7 @@ if (!isset($_SESSION['id'])) {
                         <?php else: ?>
                             <h3>By: Unknown</h3>
                         <?php endif; ?>
+                        <p><?=  convertInTimeAgo($post['created_at']) ?></p>
                     </div>
                 </a>
             <?php endforeach; ?>

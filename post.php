@@ -4,6 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 require_once 'data.php';
+require_once 'helpers/time.php';
 
 if (!isset($_GET['id'])) {
     echo "<h1>No ID provided.</h1>";
@@ -45,6 +46,10 @@ if ($post['visibility'] == 0) {
     <?php else: ?>
         <h2>By: Unknown</h2>
     <?php endif; ?>
+    <span>
+        <p>Posted <?=  htmlspecialchars(convertInTimeAgo($post['created_at'])) ?>.</p>
+        <p>Created at <?= $post['created_at'] ?></p>
+    </span>
 
     <span>
         <p><?= $post['content'] ?></p>

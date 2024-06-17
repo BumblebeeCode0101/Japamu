@@ -4,6 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 require_once 'data.php';
+require_once 'helpers/time.php';
 
 session_start();
 
@@ -47,6 +48,7 @@ foreach ($postsByUser as $key => $post) {
         <?= htmlspecialchars($user['follower']) == 1 ? 'Follower' : 'Followers' ?> - 
         <?= $postsCount ?> Post<?= $postsCount === 1 ? '' : 's' ?>
     </h2>
+    <p>Member since <?= convertInDate($user['created_at']) ?>.</p>
     <p><?= htmlspecialchars($user['description']) ?></p>
 
     <div>
@@ -62,6 +64,7 @@ foreach ($postsByUser as $key => $post) {
                     <h2><?= htmlspecialchars($post['title']) ?></h2>
                     <h3><?= htmlspecialchars($post['subtitle']) ?></h3>
                     <h3>By: <?= htmlspecialchars($user['name']) ?></h3>
+                    <p><?=  convertInTimeAgo($post['created_at']) ?></p>
                 </div>
             </a>
         <?php endforeach; ?>
