@@ -24,7 +24,7 @@ if (!isset($_SESSION['id'])) {
     <title>Japamu</title>
 </head>
 <body>
-    <header>
+    <nav>
         <?php if (!isset($_SESSION['id']) || !$_SESSION['logged_in']): ?>
             <a href="login.php">Login</a>
             <a href="register.php">Register</a>
@@ -33,7 +33,7 @@ if (!isset($_SESSION['id'])) {
             <a href="/studio/post/create.php">Create Post</a><a href="/author.php?id=<?= $_SESSION['id'] ?>"></a>
             <a href="/logout.php">Logout</a>
         <?php endif; ?>
-    </header>
+    </nav>
 
     <?php if ($posts): ?>
         <div>
