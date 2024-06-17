@@ -26,6 +26,7 @@ if (!isset($_SESSION['id'])) {
     <header>
         <?php if (!isset($_SESSION['id']) || !$_SESSION['logged_in']): ?>
             <a href="login.php">Login</a>
+            <a href="register.php">Register</a>
         <?php else: ?>
             <a href="/studio">Japamu Studio</a>
             <a href="/studio/post/create.php">Create Post</a><a href="/author.php?id=<?= $_SESSION['id'] ?>"></a>

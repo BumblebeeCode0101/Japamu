@@ -64,5 +64,52 @@ function getUserByUsername($username) {
 
     return $q->fetch(PDO::FETCH_ASSOC);
 }
+
+function createUser($tag, $name, $password, $description, $follower) {
+    global $pdo;
+    
+    $id = uniqid();
+
+    $password_hash = password_hash($password, PASSWORD_DEFAULT);
+
+    try {
+        $stmt = $pdo->prepare("INSERT INTO users (id, tag, name, password, description, follower) 
+                               VALUES (:id, :tag, :name, :password, :description, :follower)");
+
+        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':tag', $tag);
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':password', $password_hash);
+        $stmt->bindParam(':description', $description);
+        $stmt->bindParam(':follower', $follower);
+
+        $stmt->execute();
+
+        return $id;
+
+    } catch (PDOException $e) {
+        die("Error creating user: " . $e->getMessage());
+    }
+}
+
+
+function tagAlreadyExists($tag) {
+    global $pdo;
+    
+    $query = "SELECT COUNT(*) as count FROM users WHERE tag = :tag";
+    
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':tag', $tag);
+    $stmt->execute();
+    
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if ($result['count'] > 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 $posts = getPosts();
 ?>
