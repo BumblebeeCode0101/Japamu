@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($title) || empty($subtitle) || empty($content)) {
         $error = "All fields are required.";
     } elseif (strlen($title) > 250 || strlen($subtitle) > 250) {
-        $error = "Title and subtitle cannot exceed 100 characters each.";
+        $error = "Title and subtitle cannot exceed 250 characters each.";
     } else {
         createPost($title, $subtitle, $content, $creator, $visibility);
         header('Location: ../../index.php');

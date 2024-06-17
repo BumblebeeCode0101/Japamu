@@ -15,6 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     if (empty($name)) {
         $errors[] = "Username is required.";
+    } elseif (nameAlreadyExists($name)) {
+        $errors[] = "Name already exists. Please choose a different one.";
     }
     
     if (empty($password)) {

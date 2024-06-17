@@ -111,5 +111,22 @@ function tagAlreadyExists($tag) {
     }
 }
 
+function nameAlreadyExists($name) {
+    global $pdo;
+    
+    $query = "SELECT COUNT(*) as count FROM users WHERE name = :name";
+    
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':name', $name);
+    $stmt->execute();
+    
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if ($result['count'] > 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
 $posts = getPosts();
 ?>
