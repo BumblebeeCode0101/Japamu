@@ -7,7 +7,7 @@ require_once 'helpers/data.php';
 
 session_start();
 
-if (isset($_SESSION['id']) && $_SESSION['logged_in']) {
+if (isset($_SESSION['id']) && !empty($_SESSION['id'])) {
     header('Location: index.php');
     exit;
 }
