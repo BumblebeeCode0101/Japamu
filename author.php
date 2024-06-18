@@ -49,7 +49,7 @@ foreach ($postsByUser as $key => $post) {
         <?= $postsCount ?> Post<?= $postsCount === 1 ? '' : 's' ?>
     </h2>
     <p>Member since <?= convertInDate($user['created_at']) ?>.</p>
-    <p><?= htmlspecialchars($user['description']) ?></p>
+    <p><?= nl2br(htmlspecialchars($user['description'])) ?></p>
 
     <div>
         <?php foreach ($postsByUser as $post): ?>
