@@ -29,6 +29,11 @@ if ($post['visibility'] == 0) {
         exit;
     }
 }
+
+$postComments = array_filter($comments, function ($comment) use ($post) {
+    return $comment['reference'] == $post['id'] && $comment['reference_type'] == 'post';
+});
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -42,9 +47,9 @@ if ($post['visibility'] == 0) {
     <h2><?= htmlspecialchars($post['subtitle']) ?></h2>
 
     <?php if ($user):?>
-        <h2>By: <a href="author.php?tag=<?= $user['tag'] ?>"><?= htmlspecialchars($user['name']) ?></a></h2>
+        <h2>By <a href="author.php?tag=<?= $user['tag'] ?>"><?= htmlspecialchars($user['name']) ?></a></h2>
     <?php else: ?>
-        <h2>By: Unknown</h2>
+        <h2>By Unknown</h2>
     <?php endif; ?>
     <span>
         <p>Posted <?=  htmlspecialchars(convertInTimeAgo($post['created_at'])) ?>.</p>
@@ -58,6 +63,54 @@ if ($post['visibility'] == 0) {
     <?php if ($_SESSION['id'] == $post['creator'] && $_SESSION['logged_in']): ?>
         <a href="studio/post/edit.php?id=<?= $post['id'] ?>">Edit</a>
         <a href="studio/post/delete.php?id=<?= $post['id'] ?>">Delete</a>
+    <?php endif; ?>
+
+    <?php if (isset($_SESSION['id']) && $_SESSION['id']): ?>
+        <form action="comment.php?id=<?= $post['id'] ?>&&type=post" method="post">
+            <textarea name="text" id="text" cols="30" rows="10"></textarea> <br>
+            <button type="submit">Comment</button>
+        </form>
+    <?php endif; ?>
+
+    <?php if ($postComments):?>
+        <?php foreach ($postComments as $comment): ?>
+            <?php $commentUser = getUserById($comment['creator']);?>
+            <div>
+                <a href="author.php?tag=<?= $commentUser['tag'] ?>"><h3><?= htmlspecialchars($commentUser['name']) ?></h3></a>
+                <h4>Created <?= convertInTimeAgo($comment['created_at']) ?>.</h4>
+                <p><?= nl2br(htmlspecialchars($comment['text'])) ?></p>
+                
+                <?php if (isset($_SESSION['id']) && $_SESSION['id']): ?>
+                    <div>
+                        <form action="comment.php?id=<?= $comment['id'] ?>&&type=comment" method="post">
+                            <textarea name="text" id="text" cols="30" rows="5"></textarea> <br>
+                            <button type="submit">Comment</button>
+                        </form>
+                    </div>
+                <?php endif; ?>
+                
+                <?php 
+                $commentReplyComments = array_filter($comments, function ($replyComment) use ($comment) {
+                    return $replyComment['reference'] == $comment['id'] && $replyComment['reference_type'] == 'comment';
+                })
+                ?>
+
+                <?php if ($commentReplyComments): ?>
+                    <?php foreach ($commentReplyComments as $replyComment): ?>
+                        <?php $replyCommentUser = getUserById($replyComment['creator']);?>
+                        <div>
+                            <a href="author.php?tag=<?= $replyCommentUser['tag'] ?>"><h3><?= htmlspecialchars($replyCommentUser['name']) ?></h3></a>
+                            <h4>Created <?= convertInTimeAgo($replyComment['created_at']) ?>.</h4>
+                            <p><?= nl2br(htmlspecialchars($replyComment['text'])) ?></p>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <h3>No replies yet.</h3>
+                <?php endif; ?>
+            </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <h3>No comments yet.</h3>
     <?php endif; ?>
 </body>
 </html>

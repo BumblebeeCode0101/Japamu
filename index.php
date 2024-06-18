@@ -51,9 +51,9 @@ if (!isset($_SESSION['id'])) {
                         $user = getUserById($post['creator']); 
                         ?>
                         <?php if ($user): ?>
-                            <h3>By: <?= htmlspecialchars($user['name']) ?></h3>
+                            <h3>By <?= htmlspecialchars($user['name']) ?></h3>
                         <?php else: ?>
-                            <h3>By: Unknown</h3>
+                            <h3>By Unknown</h3>
                         <?php endif; ?>
                         <p><?=  convertInTimeAgo($post['created_at']) ?></p>
                     </div>

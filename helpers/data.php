@@ -41,6 +41,24 @@ function deletePost($id) {
     $q->execute([$id]);
 }
 
+function postIdExists($id) {
+    global $pdo;
+    
+    $query = "SELECT COUNT(*) as count FROM users WHERE name = :name";
+    
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':name', $name);
+    $stmt->execute();
+    
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if ($result['count'] > 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 function getUserById($id) {
     global $pdo;
     $q = $pdo->prepare("SELECT * FROM users WHERE id = ?");
@@ -92,7 +110,6 @@ function createUser($tag, $name, $password, $description, $follower) {
     }
 }
 
-
 function tagAlreadyExists($tag) {
     global $pdo;
     
@@ -128,5 +145,79 @@ function nameAlreadyExists($name) {
         return false;
     }
 }
+
+function getCommentById($id) {
+    global $pdo;
+    $q = $pdo->prepare("SELECT * FROM comments WHERE id = ?");
+    $q->execute([$id]);
+
+    return $q->fetch(PDO::FETCH_ASSOC);
+}
+
+function createComment($reference, $creator, $text) {
+    global $pdo;
+
+    try {
+        $id = uniqid();
+        $query = "INSERT INTO comments (id, reference, reference_type, creator, text) VALUES (:id, :reference, 'post', :creator, :text)";
+        $stmt = $pdo->prepare($query);
+        
+        $stmt->bindParam(':id', $id, PDO::PARAM_STR);
+        $stmt->bindParam(':reference', $reference, PDO::PARAM_STR);
+        $stmt->bindParam(':creator', $creator, PDO::PARAM_STR);
+        $stmt->bindParam(':text', $text, PDO::PARAM_STR);
+        
+        $stmt->execute();
+
+        return $id;
+    } catch (PDOException $e) {
+        throw new Exception("Error creating comment: " . $e->getMessage());
+    }
+}
+
+function createReplyComment($reference, $creator, $text) {
+    global $pdo;
+
+    try {
+        $id = uniqid();
+        $query = "INSERT INTO comments (id, reference, reference_type, creator, text) VALUES (:id, :reference, 'comment', :creator, :text)";
+        $stmt = $pdo->prepare($query);
+        
+        $stmt->bindParam(':id', $id, PDO::PARAM_STR);
+        $stmt->bindParam(':reference', $reference, PDO::PARAM_STR);
+        $stmt->bindParam(':creator', $creator, PDO::PARAM_STR);
+        $stmt->bindParam(':text', $text, PDO::PARAM_STR);
+        
+        $stmt->execute();
+
+        return $id;
+    } catch (PDOException $e) {
+        throw new Exception("Error creating comment: " . $e->getMessage());
+    }
+}
+
+function getComments() {
+    global $pdo;
+    $q = $pdo->prepare("SELECT * FROM comments");
+    $q->execute();
+
+    return $q->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function commentIdExists($comment_id) {
+    global $pdo;
+    $query = 'SELECT COUNT(*) as count FROM comments WHERE id = :comment_id';
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':comment_id', $comment_id);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($result['count'] > 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 $posts = getPosts();
+$comments = getComments();
 ?>
