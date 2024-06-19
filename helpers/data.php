@@ -1,5 +1,5 @@
 <?php 
-$pdo = new PDO('mysql:host=localhost;dbname=japamu', 'root', '', [
+$pdo = new PDO('mysql:host=localhost;dbname=japamu', 'root', 'Y3P?}NUCy),J3#W^x0F?_b>Ad!wcuPF*B)o1-8Uc@WxhKh)9>H_i4o4XUvk#uN%5ccAwQVJvP8ANYQ_^WgfKF!Qb7mj+rLk,HXuU', [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_EMULATE_PREPARES => false
 ]);
@@ -39,6 +39,16 @@ function deletePost($id) {
     global $pdo;
     $q = $pdo->prepare("DELETE FROM posts WHERE id = ?");
     $q->execute([$id]);
+
+    $comments = getComments();
+    
+    $postComments = array_filter($comments, function ($comment) use ($id) {
+        return $comment['reference'] == $id && $comment['reference_type'] == 'post';
+    });
+
+    foreach ($postComments as $comment) {
+        deleteComment($comment['id']);
+    }
 }
 
 function postIdExists($id) {
