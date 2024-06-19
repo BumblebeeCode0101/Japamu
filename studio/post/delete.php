@@ -31,7 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($_SESSION['id'] == $post['creator']) {
         deletePost($id);
 
-        // Redirect to index or another appropriate page after deletion
         header('Location: ../../index.php');
         exit;
     }

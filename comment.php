@@ -41,13 +41,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     } elseif ($type == 'comment') {
         $comment = getCommentById($id);
+        $post = getPostById($comment['reference']);
 
         if (!$comment && $_SESSION['id'] != $comment['creator']) {
             echo "<h1>Comment not found.</h1>";
             exit;
         }
-
-        $post = getPostById($comment['reference']);
 
         if (!$post || ($post['visibility'] == 0 && $_SESSION['id'] != $post['creator'])) {
             echo "<h1>Post not found.</h1>";

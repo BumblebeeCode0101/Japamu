@@ -204,6 +204,22 @@ function getComments() {
     return $q->fetchAll(PDO::FETCH_ASSOC);
 }
 
+function deleteComment($id) {
+    global $pdo;
+    $stmt = $pdo->prepare("DELETE FROM comments WHERE id = :id");
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+    return true;
+}
+
+function updateComment($id, $text) {
+    global $pdo;
+    $stmt = $pdo->prepare("UPDATE comments SET text = :text WHERE id = :id");
+    $stmt->bindParam(':id', $id);
+    $stmt->bindParam(':text', $text);
+    $stmt->execute();
+    return true;
+}
 function commentIdExists($comment_id) {
     global $pdo;
     $query = 'SELECT COUNT(*) as count FROM comments WHERE id = :comment_id';

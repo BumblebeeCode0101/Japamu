@@ -80,6 +80,14 @@ $postComments = array_filter($comments, function ($comment) use ($post) {
                 <h4>Created <?= convertInTimeAgo($comment['created_at']) ?>.</h4>
                 <p><?= nl2br(htmlspecialchars($comment['text'])) ?></p>
                 
+
+                <?php if ($comment['creator'] == $_SESSION['id']): ?>
+                    <form action="comment.php?id=<?= $comment['id'] ?>&&type=comment" method="post">
+                        <a href="comment/delete.php?id=<?= $comment['id'] ?>">Delete</a> <br>
+                        <a href="comment/edit.php?id=<?= $comment['id'] ?>">Edit</a>
+                    </form>
+                <?php endif; ?>
+
                 <?php if (isset($_SESSION['id']) && $_SESSION['id']): ?>
                     <div>
                         <form action="comment.php?id=<?= $comment['id'] ?>&&type=comment" method="post">
@@ -88,7 +96,7 @@ $postComments = array_filter($comments, function ($comment) use ($post) {
                         </form>
                     </div>
                 <?php endif; ?>
-                
+
                 <?php 
                 $commentReplyComments = array_filter($comments, function ($replyComment) use ($comment) {
                     return $replyComment['reference'] == $comment['id'] && $replyComment['reference_type'] == 'comment';
@@ -102,6 +110,13 @@ $postComments = array_filter($comments, function ($comment) use ($post) {
                             <a href="author.php?tag=<?= $replyCommentUser['tag'] ?>"><h3><?= htmlspecialchars($replyCommentUser['name']) ?></h3></a>
                             <h4>Created <?= convertInTimeAgo($replyComment['created_at']) ?>.</h4>
                             <p><?= nl2br(htmlspecialchars($replyComment['text'])) ?></p>
+
+                            <?php if ($replyComment['creator'] == $_SESSION['id']): ?>
+                                <form action="comment.php?id=<?= $replyComment['id'] ?>&&type=reply" method="post">
+                                    <a href="comment/delete.php?id=<?= $replyComment['id'] ?>">Delete</a>
+                                    <a href="comment/edit.php?id=<?= $replyComment['id'] ?>">Edit</a>
+                                </form>
+                            <?php endif; ?>
                         </div>
                     <?php endforeach; ?>
                 <?php else: ?>
