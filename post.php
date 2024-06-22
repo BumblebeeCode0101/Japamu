@@ -30,10 +30,11 @@ if ($post['visibility'] == 0) {
     }
 }
 
+addRead($post['id']);
+
 $postComments = array_filter($comments, function ($comment) use ($post) {
     return $comment['reference'] == $post['id'] && $comment['reference_type'] == 'post';
 });
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -51,7 +52,9 @@ $postComments = array_filter($comments, function ($comment) use ($post) {
     <?php else: ?>
         <h2>By Unknown</h2>
     <?php endif; ?>
+
     <span>
+        <p><?= htmlspecialchars($post['read_count']) ?> person<?= $post['read_count'] === 1 ? '' : 's' ?> have read this</p>
         <p>Posted <?=  htmlspecialchars(convertInTimeAgo($post['created_at'])) ?>.</p>
         <p>Created at <?= $post['created_at'] ?></p>
     </span>

@@ -69,6 +69,12 @@ function postIdExists($id) {
     }
 }
 
+function addRead($id) {
+    global $pdo;
+    $q = $pdo->prepare("UPDATE posts SET read_count = read_count + 1 WHERE id = ?");
+    $q->execute([$id]);
+}
+
 function getUserById($id) {
     global $pdo;
     $q = $pdo->prepare("SELECT * FROM users WHERE id = ?");

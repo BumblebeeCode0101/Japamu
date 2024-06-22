@@ -24,6 +24,13 @@ if (!isset($_SESSION['id'])) {
     <title>Japamu</title>
 </head>
 <body>
+    <?php if (!$_SESSION['id']): ?>
+        <h1>Hey, Welcome to Japamu!</h1>
+        <p>Here you are right if you search for cool blog posts and articles. <br>
+        If you want to join Japamu please <a href="/register.php">Register</a> <br>
+        or if you are already a user <a href="/login.php">Login</a>  here .</p>
+    <?php endif; ?>
+
     <nav>
         <?php if (!isset($_SESSION['id']) || !$_SESSION['logged_in']): ?>
             <a href="login.php">Login</a>
@@ -34,7 +41,7 @@ if (!isset($_SESSION['id'])) {
             <a href="/logout.php">Logout</a>
         <?php endif; ?>
     </nav>
-
+    
     <?php if ($posts): ?>
         <div>
             <?php foreach ($posts as $post): ?>
@@ -56,6 +63,7 @@ if (!isset($_SESSION['id'])) {
                             <h3>By Unknown</h3>
                         <?php endif; ?>
                         <p><?=  convertInTimeAgo($post['created_at']) ?></p>
+                        <p><?= htmlspecialchars($post['read_count']) ?> person<?= $post['read_count'] === 1 ? '' : 's' ?> have read this</p>
                     </div>
                 </a>
             <?php endforeach; ?>
