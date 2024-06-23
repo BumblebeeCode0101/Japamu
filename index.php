@@ -77,6 +77,6 @@ if (!isset($_SESSION['id'])) {
         <h2>No posts found</h2>
     <?php endif; ?>
 
-    <script src="/js/theme_switcher.js"></script>
+    <script src="/js/theme.js"></script>
 </body>
 </html>

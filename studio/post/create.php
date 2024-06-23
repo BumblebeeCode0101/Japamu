@@ -152,6 +152,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         });
     }
     </script>
-    <script src="/js/theme_switcher.js"></script>
+    <script src="/js/theme.js"></script>
 </body>
 </html>

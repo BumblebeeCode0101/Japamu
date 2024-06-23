@@ -147,6 +147,6 @@ $postComments = array_filter($comments, function ($comment) use ($post) {
         <h3>No comments yet.</h3>
     <?php endif; ?>
 
-    <script src="/js/theme_switcher.js"></script>
+    <script src="/js/theme.js"></script>
 </body>
 </html>
