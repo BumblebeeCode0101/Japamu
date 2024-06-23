@@ -63,7 +63,6 @@ if (!isset($_SESSION['id'])) {
                             <h3>By Unknown</h3>
                         <?php endif; ?>
                         <p><?=  convertInTimeAgo($post['created_at']) ?></p>
-                        <p><?= htmlspecialchars($post['read_count']) ?> person<?= $post['read_count'] === 1 ? '' : 's' ?> have read this</p>
                     </div>
                 </a>
             <?php endforeach; ?>

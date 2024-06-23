@@ -65,7 +65,6 @@ foreach ($postsByUser as $key => $post) {
                     <h3><?= htmlspecialchars($post['subtitle']) ?></h3>
                     <h3>By <?= htmlspecialchars($user['name']) ?></h3>
                     <p><?=  convertInTimeAgo($post['created_at']) ?></p>
-                    <p><?= htmlspecialchars($post['read_count']) ?> person<?= $post['read_count'] === 1 ? '' : 's' ?> have read this</p>
                 </div>
             </a>
         <?php endforeach; ?>
