@@ -63,8 +63,7 @@ foreach ($postsByUser as $key => $post) {
                 <div>
                     <h2><?= htmlspecialchars($post['title']) ?></h2>
                     <h3><?= htmlspecialchars($post['subtitle']) ?></h3>
-                    <h3>By <?= htmlspecialchars($user['name']) ?></h3>
-                    <p><?=  convertInTimeAgo($post['created_at']) ?></p>
+                    <p>By <?= htmlspecialchars($user['name']) ?> | <?= convertInTimeAgo($post['created_at']) ?></p>
                 </div>
             </a>
         <?php endforeach; ?>

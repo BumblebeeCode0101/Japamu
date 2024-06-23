@@ -17,33 +17,38 @@ if (!isset($_SESSION['id'])) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="m-6">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Japamu</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
 </head>
 <body>
-    <?php if (!$_SESSION['id']): ?>
-        <h1>Hey, Welcome to Japamu!</h1>
-        <p>Here you are right if you search for cool blog posts and articles. <br>
-        If you want to join Japamu please <a href="/register.php">Register</a> <br>
-        or if you are already a user <a href="/login.php">Login</a>  here .</p>
-    <?php endif; ?>
+    <nav class="navbar">
+        <button onclick="switchTheme()" class="button" id="theme">Switch Theme</button>
 
-    <nav>
         <?php if (!isset($_SESSION['id']) || !$_SESSION['logged_in']): ?>
-            <a href="login.php">Login</a>
-            <a href="register.php">Register</a>
+            <a href="login.php" class="button">Login</a>
+            <a href="register.php" class="button">Register</a>
         <?php else: ?>
-            <a href="/studio">Japamu Studio</a>
-            <a href="/studio/post/create.php">Create Post</a><a href="/author.php?id=<?= $_SESSION['id'] ?>"></a>
-            <a href="/logout.php">Logout</a>
+            <a href="/studio" class="button">Japamu Studio</a>
+            <a href="/studio/post/create.php" class="button">Create Post</a><a href="/author.php?id=<?= $_SESSION['id'] ?>"></a>
+            <a href="/logout.php" class="button">Logout</a>
         <?php endif; ?>
     </nav>
+
+    <?php if (!$_SESSION['id']): ?>
+        <div>
+            <h1 class="title is-size-1">Hey, Welcome to Japamu!</h1>
+            <p class="has-text-info">Here you are right if you search for cool blog posts and articles.</p>
+        </div>
+    <?php endif; ?>
     
     <?php if ($posts): ?>
         <div>
+            <h4 class="title is-size-4 m-4">Posts</h4>
             <?php foreach ($posts as $post): ?>
                 <?php 
                 if ($post['visibility'] == 0 && $_SESSION['id'] != $post['creator']): 
@@ -51,18 +56,19 @@ if (!isset($_SESSION['id'])) {
                 endif; 
                 ?>
                 <a href="post.php?id=<?= htmlspecialchars($post['id']) ?>">
-                    <div>
-                        <h2><?= htmlspecialchars($post['title']) ?></h2>
-                        <h3><?= htmlspecialchars($post['subtitle']) ?></h3>
+                    <div class="card box p-4 mt-4">
+                        <h4 class="title"><?= htmlspecialchars($post['title']) ?></h4>
+                        <h5 class="subtitle"><?= htmlspecialchars($post['subtitle']) ?></h5>
                         <?php 
                         $user = getUserById($post['creator']); 
                         ?>
-                        <?php if ($user): ?>
-                            <h3>By <?= htmlspecialchars($user['name']) ?></h3>
-                        <?php else: ?>
-                            <h3>By Unknown</h3>
-                        <?php endif; ?>
-                        <p><?=  convertInTimeAgo($post['created_at']) ?></p>
+                        <div class="is-italic">
+                            <?php if ($user): ?>
+                                <p>By <?= htmlspecialchars($user['name']) ?> | <?= convertInTimeAgo($post['created_at']) ?></p>
+                            <?php else: ?>
+                                <p>By Unknown | <?= convertInTimeAgo($post['created_at']) ?></p>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </a>
             <?php endforeach; ?>
@@ -70,5 +76,7 @@ if (!isset($_SESSION['id'])) {
     <?php else: ?>
         <h2>No posts found</h2>
     <?php endif; ?>
+
+    <script src="/js/theme_switcher.js"></script>
 </body>
 </html>

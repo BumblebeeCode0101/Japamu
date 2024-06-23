@@ -43,10 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $post['content'] = $content;
         $post['visibility'] = $visibility;
 
-        // Update the post in the database
         updatePost($post);
 
-        // Redirect to the post view page after updating
         header('Location: ../../post.php?id=' . $post['id']);
         exit;
     }

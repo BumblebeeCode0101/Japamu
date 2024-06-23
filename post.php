@@ -35,51 +35,68 @@ $postComments = array_filter($comments, function ($comment) use ($post) {
 });
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="m-6">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Japamu Post - <?= htmlspecialchars($post['title']) ?></title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
 </head>
 <body>
-    <h1><?= htmlspecialchars($post['title']) ?></h1>
-    <h2><?= htmlspecialchars($post['subtitle']) ?></h2>
+    <nav class="navbar">
+        <a href="index.php" class="button">Home</a>
 
-    <?php if ($user):?>
-        <h2>By <a href="author.php?tag=<?= $user['tag'] ?>"><?= htmlspecialchars($user['name']) ?></a></h2>
-    <?php else: ?>
-        <h2>By Unknown</h2>
-    <?php endif; ?>
+        <button onclick="switchTheme()" class="button" id="theme">Switch Theme</button>
 
-    <span>
-        <p>Posted <?=  htmlspecialchars(convertInTimeAgo($post['created_at'])) ?>.</p>
-        <p>Created at <?= $post['created_at'] ?></p>
-    </span>
+        <?php if (!isset($_SESSION['id']) || !$_SESSION['logged_in']): ?>
+            <a href="login.php" class="button">Login</a>
+            <a href="register.php" class="button">Register</a>
+        <?php else: ?>
+            <a href="/studio" class="button">Japamu Studio</a>
+            <a href="/studio/post/create.php" class="button">Create Post</a><a href="/author.php?id=<?= $_SESSION['id'] ?>"></a>
+            <a href="/logout.php" class="button">Logout</a>
+        <?php endif; ?>
+    </nav>
 
-    <span>
+    <h1 class="title is-size-1"><?= htmlspecialchars($post['title']) ?></h1>
+    <h2 class="subtitle title is-size-3"><?= htmlspecialchars($post['subtitle']) ?></h2>
+
+    <div class="is-italic">
+        <?php if ($user): ?>
+            <p>By <a href="author.php?tag=<?= $user['tag'] ?>"><?= htmlspecialchars($user['name']) ?></a> | <?= convertInTimeAgo($post['created_at']) ?></p>
+        <?php else: ?>
+            <p>By Unknown | <?= convertInTimeAgo($post['created_at']) ?></p>
+        <?php endif; ?>
+    </div>
+
+    <div class="my-6 is-size-5">
         <p><?= $post['content'] ?></p>
-    </span>
+    </div>
 
     <?php if ($_SESSION['id'] == $post['creator'] && $_SESSION['logged_in']): ?>
-        <a href="studio/post/edit.php?id=<?= $post['id'] ?>">Edit</a>
-        <a href="studio/post/delete.php?id=<?= $post['id'] ?>">Delete</a>
+        <div class="mb-4">
+            <a href="studio/post/edit.php?id=<?= $post['id'] ?>" class="button is-link">Edit</a>
+            <a href="studio/post/delete.php?id=<?= $post['id'] ?>" class="button is-danger">Delete</a>
+        </div>
     <?php endif; ?>
 
+    <hr>
     <?php if (isset($_SESSION['id']) && $_SESSION['id']): ?>
-        <form action="comment.php?id=<?= $post['id'] ?>&&type=post" method="post">
-            <textarea name="text" id="text" cols="30" rows="10"></textarea> <br>
-            <button type="submit">Comment</button>
-        </form>
+        <div class="mb-6">
+            <form action="comment.php?id=<?= $post['id'] ?>&&type=post" method="post" class="control">
+                <textarea name="text" id="text" rows="4" class="textarea"></textarea> <br>
+                <button class="button is-link" type="submit">Comment</button>
+            </form>
+        </div>
     <?php endif; ?>
 
-    <?php if ($postComments):?>
+    <?php if ($postComments): ?>
         <?php foreach ($postComments as $comment): ?>
-            <?php $commentUser = getUserById($comment['creator']);?>
-            <div>
-                <a href="author.php?tag=<?= $commentUser['tag'] ?>"><h3><?= htmlspecialchars($commentUser['name']) ?></h3></a>
-                <h4>Created <?= convertInTimeAgo($comment['created_at']) ?>.</h4>
+            <?php $commentUser = getUserById($comment['creator']); ?>
+            <div class="mb-4">
+                <p class="is-italic is-size-7"><a href="author.php?tag=<?= $commentUser['tag'] ?>"><?= htmlspecialchars($commentUser['name']) ?></a> | Created <?= convertInTimeAgo($comment['created_at']) ?></p>
                 <p><?= nl2br(htmlspecialchars($comment['text'])) ?></p>
-                
 
                 <?php if ($comment['creator'] == $_SESSION['id']): ?>
                     <form action="comment.php?id=<?= $comment['id'] ?>&&type=comment" method="post">
@@ -88,44 +105,48 @@ $postComments = array_filter($comments, function ($comment) use ($post) {
                     </form>
                 <?php endif; ?>
 
+                <div class="ml-6">
                 <?php if (isset($_SESSION['id']) && $_SESSION['id']): ?>
-                    <div>
-                        <form action="comment.php?id=<?= $comment['id'] ?>&&type=comment" method="post">
-                            <textarea name="text" id="text" cols="30" rows="5"></textarea> <br>
-                            <button type="submit">Comment</button>
-                        </form>
-                    </div>
-                <?php endif; ?>
-
-                <?php 
-                $commentReplyComments = array_filter($comments, function ($replyComment) use ($comment) {
-                    return $replyComment['reference'] == $comment['id'] && $replyComment['reference_type'] == 'comment';
-                })
-                ?>
-
-                <?php if ($commentReplyComments): ?>
-                    <?php foreach ($commentReplyComments as $replyComment): ?>
-                        <?php $replyCommentUser = getUserById($replyComment['creator']);?>
-                        <div>
-                            <a href="author.php?tag=<?= $replyCommentUser['tag'] ?>"><h3><?= htmlspecialchars($replyCommentUser['name']) ?></h3></a>
-                            <h4>Created <?= convertInTimeAgo($replyComment['created_at']) ?>.</h4>
-                            <p><?= nl2br(htmlspecialchars($replyComment['text'])) ?></p>
-
-                            <?php if ($replyComment['creator'] == $_SESSION['id']): ?>
-                                <form action="comment.php?id=<?= $replyComment['id'] ?>&&type=reply" method="post">
-                                    <a href="comment/delete.php?id=<?= $replyComment['id'] ?>">Delete</a>
-                                    <a href="comment/edit.php?id=<?= $replyComment['id'] ?>">Edit</a>
-                                </form>
-                            <?php endif; ?>
+                        <div class="mb-4">
+                            <form action="comment.php?id=<?= $comment['id'] ?>&&type=comment" method="post">
+                                <textarea name="text" id="text" cols="30" rows="2" class="textarea"></textarea> <br>
+                                <button class="button is-link" type="submit">Reply</button>
+                            </form>
                         </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <h3>No replies yet.</h3>
-                <?php endif; ?>
+                    <?php endif; ?>
+                
+                    <?php
+                    $commentReplyComments = array_filter($comments, function ($replyComment) use ($comment) {
+                        return $replyComment['reference'] == $comment['id'] && $replyComment['reference_type'] == 'comment';
+                    })
+                        ?>
+                
+                    <?php if ($commentReplyComments): ?>
+                        <?php foreach ($commentReplyComments as $replyComment): ?>
+                            <?php $replyCommentUser = getUserById($replyComment['creator']); ?>
+                            <div>
+                                <p class="is-italic is-size-7"><a href="author.php?tag=<?= $replyCommentUser['tag'] ?>"><?= htmlspecialchars($replyCommentUser['name']) ?></a> | Created <?= convertInTimeAgo($replyComment['created_at']) ?></p>
+
+                                <p><?= nl2br(htmlspecialchars($replyComment['text'])) ?></p>
+                
+                                <?php if ($replyComment['creator'] == $_SESSION['id']): ?>
+                                    <form action="comment.php?id=<?= $replyComment['id'] ?>&&type=reply" method="post">
+                                        <a href="comment/delete.php?id=<?= $replyComment['id'] ?>">Delete</a>
+                                        <a href="comment/edit.php?id=<?= $replyComment['id'] ?>">Edit</a>
+                                    </form>
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <h3>No replies yet.</h3>
+                    <?php endif; ?>
+                </div>
             </div>
         <?php endforeach; ?>
     <?php else: ?>
         <h3>No comments yet.</h3>
     <?php endif; ?>
+
+    <script src="/js/theme_switcher.js"></script>
 </body>
 </html>
